@@ -68,7 +68,7 @@ RUN     buildDeps="autoconf \
                    make \
                    nasm \
                    perl \
-                   python-dev \
+                   python-devel \
                    openssl-devel \
                    tar \
                    yasm \
