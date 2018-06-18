@@ -40,6 +40,7 @@ ENV         FFMPEG_VERSION=3.4.2     \
             FONTCONFIG_VERSION=2.12.4 \
             LIBVIDSTAB_VERSION=1.1.0  \
             KVAZAAR_VERSION=1.2.0     \
+            LIBXML2_VERSION=2.9.8     \
             AOM_VERSION=master        \
             SRC=/usr/local
 
@@ -52,6 +53,7 @@ ARG         FREETYPE_SHA256SUM="5d03dd76c2171a7601e9ce10551d52d4471cf92cd205948e
 ARG         LIBVIDSTAB_SHA256SUM="14d2a053e56edad4f397be0cb3ef8eb1ec3150404ce99a426c4eb641861dc0bb  v1.1.0.tar.gz"
 ARG         LIBASS_SHA256SUM="8fadf294bf701300d4605e6f1d92929304187fca4b8d8a47889315526adbafd7  0.13.7.tar.gz"
 ARG         FRIBIDI_SHA256SUM="3fc96fa9473bd31dcb5500bdf1aa78b337ba13eb8c301e7c28923fea982453a8  0.19.7.tar.gz"
+ARG         LIBXML2_SHA256SUM="0b74e51595654f958148759cfef0993114ddccccbb6f31aee018f3558e8e2732  libxml2-2.9.8.tar.gz"
 
 
 RUN      buildDeps="autoconf \
@@ -75,6 +77,18 @@ RUN      buildDeps="autoconf \
                     zlib1g-dev" && \
         apt-get -yqq update && \
         apt-get install -yq --no-install-recommends ${buildDeps}
+## libxml2 http://xmlsoft.org/
+RUN \
+        DIR=/tmp/libxml2 && \
+        mkdir -p ${DIR} && \
+        cd ${DIR} && \
+        curl -sLO http://xmlsoft.org/sources/libxml2-${LIBXML2_VERSION}.tar.gz && \
+        echo ${LIBXML2_SHA256SUM} | sha256sum --check && \
+        tar -zx --strip-components=1 -f libxml2-${LIBXML2_VERSION}.tar.gz && \
+        ./configure --prefix="${PREFIX}" --enable-shared  && \
+        make && \
+        make install && \
+        rm -rf ${DIR}
 ## opencore-amr https://sourceforge.net/projects/opencore-amr/
 RUN \
         DIR=/tmp/opencore-amr && \
@@ -334,6 +348,7 @@ RUN  \
         --enable-libx265 \
         --enable-libxvid \
         --enable-libx264 \
+        --enable-libxml2 \
         --enable-nonfree \
         --enable-openssl \
         --enable-libfdk_aac \

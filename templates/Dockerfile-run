@@ -1,3 +1,15 @@
+## libxml2 http://xmlsoft.org/
+RUN \
+        DIR=/tmp/libxml2 && \
+        mkdir -p ${DIR} && \
+        cd ${DIR} && \
+        curl -sLO http://xmlsoft.org/sources/libxml2-${LIBXML2_VERSION}.tar.gz && \
+        echo ${LIBXML2_SHA256SUM} | sha256sum --check && \
+        tar -zx --strip-components=1 -f libxml2-${LIBXML2_VERSION}.tar.gz && \
+        ./configure --prefix="${PREFIX}" --enable-shared  && \
+        make && \
+        make install && \
+        rm -rf ${DIR}
 ## opencore-amr https://sourceforge.net/projects/opencore-amr/
 RUN \
         DIR=/tmp/opencore-amr && \
@@ -257,6 +269,7 @@ RUN  \
         --enable-libx265 \
         --enable-libxvid \
         --enable-libx264 \
+        --enable-libxml2 \
         --enable-nonfree \
         --enable-openssl \
         --enable-libfdk_aac \
